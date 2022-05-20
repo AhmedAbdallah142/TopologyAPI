@@ -1,17 +1,13 @@
 package API;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import file.FileOperation;
 import model.Topology;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
+import org.json.simple.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -40,11 +36,10 @@ public class API implements IAPI{
     public boolean readJson(String FileName) {
         FileOperation file = new FileOperation();
         try {
-            JsonObject j = file.readJsonFile(FileName);
-            Topology t = new Topology(String.valueOf(j.get("id")),j.getAsJsonArray("components"));
+            JSONObject j = file.readJsonFile(FileName);
+            Topology t = new Topology(String.valueOf(j.get("id")), (JSONArray) j.get("components"));
             topologies.put(t.getId(),t);
         } catch (IOException | ParseException e) {
-            e.printStackTrace();
             return false;
         }
         return true;
@@ -60,7 +55,10 @@ public class API implements IAPI{
     @Override
     public boolean writeJson(String TopologyID) {
         FileOperation file = new FileOperation();
-        return file.writeJsonFile(topologies.get(TopologyID));
+        if(topologies.containsKey(TopologyID))
+            return file.writeJsonFile(topologies.get(TopologyID));
+        else
+            return false;
     }
 
     /**
@@ -68,8 +66,8 @@ public class API implements IAPI{
      * @return Arraylist of topologies exist in memory.
      */
     @Override
-    public ArrayList<Topology> queryTopologies() {
-        return (ArrayList<Topology>) topologies.values();
+    public Collection<Topology> queryTopologies() {
+        return topologies.values();
     }
 
     /**
@@ -88,8 +86,11 @@ public class API implements IAPI{
      * @return JsonArray of the devices.
      */
     @Override
-    public JsonArray queryDevices(String TopologyID) {
-        return topologies.get(TopologyID).getComponents();
+    public JSONArray queryDevices(String TopologyID) {
+        if (topologies.containsKey(TopologyID))
+            return topologies.get(TopologyID).getComponents();
+        else
+            return null;
     }
 
     /**
@@ -99,13 +100,15 @@ public class API implements IAPI{
      * @return JsonArray of the devices.
      */
     @Override
-    public JsonArray queryDevicesWithNetListNode(String TopologyID, String NetListNodeID) {
-        JsonArray result = new JsonArray();
-        for (JsonElement j : topologies.get(TopologyID).getComponents()){
-            JsonObject netList =  j.getAsJsonObject().getAsJsonObject("netlist");
-            Set<String> keys = netList.keySet();
-            for (String k : keys){
-                if (String.valueOf(netList.get(k)).equalsIgnoreCase(NetListNodeID)){
+    public JSONArray queryDevicesWithNetListNode(String TopologyID, String NetListNodeID) {
+        if (!topologies.containsKey(TopologyID))
+            return null;
+        JSONArray result = new JSONArray();
+        for (Object j : topologies.get(TopologyID).getComponents()){
+            JSONObject netList = (JSONObject) ((JSONObject) j).get("netlist");
+            Collection<String> values = netList.values();
+            for (String k : values){
+                if (String.valueOf(k).equalsIgnoreCase(NetListNodeID)){
                     result.add(j);
                     break;
                 }

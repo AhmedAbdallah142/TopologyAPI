@@ -1,7 +1,7 @@
 package model;
 
-import com.google.gson.JsonArray;
 
+import org.json.simple.JSONArray;
 
 /**
  * the topology object
@@ -13,14 +13,14 @@ public class Topology {
     String id;
 
     // an array of devices connected to this topology
-    JsonArray components;
+    JSONArray components;
 
     /**
      * construct the topology id and devices connected
      * @param id the topology id
      * @param components devices connected with the topology
      */
-    public Topology(String id,JsonArray components){
+    public Topology(String id,JSONArray components){
         this.id = id;
         this.components = components;
     }
@@ -45,7 +45,7 @@ public class Topology {
      * get the devices connected to this topology
      * @return a JsonArray of the devices
      */
-    public JsonArray getComponents() {
+    public JSONArray getComponents() {
         return components;
     }
 
@@ -53,7 +53,7 @@ public class Topology {
      * set the devices connected to this topology with a new one
      * @param components new JsonArray of connected devices
      */
-    public void setComponents(JsonArray components) {
+    public void setComponents(JSONArray components) {
         this.components = components;
     }
 }

@@ -2,8 +2,10 @@ package API;
 
 import com.google.gson.JsonArray;
 import model.Topology;
+import org.json.simple.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 /**
@@ -31,7 +33,7 @@ public interface IAPI {
      * This method get all topologies exist in memory
      * @return Arraylist of topologies exist in memory.
      */
-    ArrayList<Topology> queryTopologies();
+    Collection<Topology> queryTopologies();
     /**
      * This method delete a topology from the memory
      * @param TopologyID the id of the topology required to be deleted.
@@ -43,7 +45,7 @@ public interface IAPI {
      * @param TopologyID the id of the topology ot get devices connected to it.
      * @return JsonArray of the devices.
      */
-    JsonArray queryDevices(String TopologyID);
+    JSONArray queryDevices(String TopologyID);
 
     /**
      * get all devices connected to a given netList node in a specific given topology.
@@ -51,5 +53,5 @@ public interface IAPI {
      * @param NetListNodeID the id on the given netList
      * @return JsonArray of the devices.
      */
-    JsonArray queryDevicesWithNetListNode(String TopologyID,String NetListNodeID);
+    JSONArray queryDevicesWithNetListNode(String TopologyID,String NetListNodeID);
 }

@@ -1,8 +1,8 @@
 package file;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import model.Topology;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -23,10 +23,10 @@ public class FileOperation {
      * @throws IOException
      * @throws ParseException
      */
-    public JsonObject readJsonFile(String filePath) throws IOException, ParseException {
+    public JSONObject readJsonFile(String filePath) throws IOException, ParseException {
         JSONParser jsonParser = new JSONParser();
         FileReader f = new FileReader(filePath);
-        return (JsonObject) jsonParser.parse(f);
+        return (JSONObject) jsonParser.parse(f);
     }
 
     /**
@@ -36,7 +36,7 @@ public class FileOperation {
      */
     public boolean writeJsonFile(Topology data) {
         try {
-            FileWriter f = new FileWriter(String.valueOf(data.getId()+".json"));
+            FileWriter f = new FileWriter(data.getId()+".json");
             f.write(new Gson().toJson(data));
             f.flush();
         } catch (IOException e) {
